@@ -1,11 +1,18 @@
 package main.java.com.worldline.interview;
 
 public class WidgetMachine {
-    private InternalCombustionEngine engine = new InternalCombustionEngine(FuelType.PETROL);
 
-    public int produceWidgets(int quantity) {
+    private AbstractEngine engine;
+
+    public WidgetMachine(AbstractEngine engine, FuelType fuelType, int fuelLevel) {
+        this.engine = engine;
+
+        engine.fill(fuelType, fuelLevel);
+    }
+
+    public double produceWidgets(int quantity) {
         engine.start();
-        int cost = 0;
+        double cost = 0;
 
         if (engine.isRunning()) {
             cost = produce(quantity);
@@ -16,19 +23,14 @@ public class WidgetMachine {
         return cost;
     }
 
-    private int produce(int quantity) {
+    private double produce(int quantity) {
         int batch = 0;
         int batchCount = 0;
-        int costPerBatch = 0;
-
-        if (engine.getFuelType() == FuelType.PETROL) {
-            costPerBatch = 9;
-        } else if (engine.getFuelType() == FuelType.DIESEL) {
-            costPerBatch = 12;
-        }
+        int batchSize = engine.getBatchSize();
+        double costPerBatch = engine.getFuelType().price;
 
         while (batch < quantity) {
-            batch = batch + 8;
+            batch = batch + batchSize;
             batchCount++;
         }
 
